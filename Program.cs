@@ -1,4 +1,5 @@
 using FlexyBox.common;
+using FlexyBox.core.Shared;
 using FlexyBox.dal.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,8 @@ namespace FlexyBox.api
                 options.Authority = okta.Authority;
                 options.Audience = okta.Audience;
             });
+
+            builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DeleteCommand).Assembly));
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
