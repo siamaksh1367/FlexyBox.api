@@ -4,14 +4,22 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>ac67d5f4-4690-491a-a0d9-b99948807318</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="FlexyBox.api\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FlexyBox.common\FlexyBox.common.csproj" />
+    <ProjectReference Include="..\FlexyBox.dal\FlexyBox.dal.csproj" />
   </ItemGroup>
 
 </Project>
