@@ -51,7 +51,7 @@ namespace FlexyBox.api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<int>> DeletePost(int id)
         {
-            var result = await _mediator.Send(new DeletePostCommand() { Id = id });
+            var result = await _mediator.Send(new DeletePostCommand(id));
             return Ok(result);
         }
 
