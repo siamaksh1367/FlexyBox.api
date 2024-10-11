@@ -1,6 +1,7 @@
 ﻿using FlexyBox.core.Commands.CreateComment;
 using FlexyBox.core.Commands.CreatePost;
 using FlexyBox.core.Commands.DeletePost;
+using FlexyBox.core.Queries.GetPostsIncludingDetails;
 using FlexyBox.dal.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,16 +24,9 @@ namespace FlexyBox.api.Controllers
         public async Task<ActionResult<IEnumerable<Post>>> GetPostsIncludingDetail()
         {
 
-            var result = await _mediator.Send(new GetAllPostsQuery());
+            var result = await _mediator.Send(new GetPostsIncludingDetailsQuery());
             return Ok(result);
         }
-        [HttpGet(Name = "GetPostsWithDetails")]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPostsWithDetails()
-        {
-            var result = await _mediator.Send(new GetAllPostsQuery());
-            return Ok(result);
-        }
-
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
