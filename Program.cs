@@ -14,10 +14,10 @@ namespace FlexyBox.api
 
             builder.Configuration.AddEnvironmentVariables();
             builder.Configuration.AddUserSecrets("ac67d5f4-4690-491a-a0d9-b99948807318");
-            var okta = builder.Configuration.GetSection(nameof(Okta)).Get<Okta>();
+            var okta = builder.Configuration.GetSection(nameof(OktaServer)).Get<OktaServer>();
             var sql = builder.Configuration.GetSection(nameof(SQLConnectionString)).Get<SQLConnectionString>();
 
-            builder.Services.Configure<Okta>(builder.Configuration.GetSection(nameof(Okta)));
+            builder.Services.Configure<OktaServer>(builder.Configuration.GetSection(nameof(OktaServer)));
             builder.Services.Configure<SQLConnectionString>(builder.Configuration.GetSection(nameof(SQLConnectionString)));
             builder.Services.Configure<StorageConnectionString>(builder.Configuration.GetSection(nameof(StorageConnectionString)));
 
