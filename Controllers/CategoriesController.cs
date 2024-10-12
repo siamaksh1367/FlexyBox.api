@@ -4,12 +4,14 @@ using FlexyBox.core.Commands.UpdateCategory;
 using FlexyBox.core.Queries.GetCategories;
 using FlexyBox.dal.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlexyBox.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -29,7 +31,7 @@ namespace FlexyBox.api.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(UpdateCategoryCommand updateCategoryCommand)
+        public async Task<IActionResult> PutCategory([FromBody] UpdateCategoryCommand updateCategoryCommand)
         {
             var result = await _mediator.Send(updateCategoryCommand);
             return Ok(result);
@@ -37,7 +39,7 @@ namespace FlexyBox.api.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(CreateCategoryCommand createCategoryCommand)
+        public async Task<ActionResult<Category>> PostCategory([FromBody] CreateCategoryCommand createCategoryCommand)
         {
             var result = await _mediator.Send(createCategoryCommand);
             return Ok(result);
@@ -46,7 +48,7 @@ namespace FlexyBox.api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<int>> DeleteCategory(int id)
         {
-            var result = await _mediator.Send(new DeleteCategoryCommand() { Id = id });
+            var result = await _mediator.Send(new DeleteCategoryCommand(id));
             return Ok(result);
         }
     }

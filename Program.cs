@@ -1,5 +1,8 @@
 using FlexyBox.common;
+using FlexyBox.core;
+using FlexyBox.core.Services.ContentStorage;
 using FlexyBox.core.Shared;
+using FlexyBox.dal.Generic;
 using FlexyBox.dal.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -20,24 +23,45 @@ namespace FlexyBox.api
             builder.Services.Configure<OktaServer>(builder.Configuration.GetSection(nameof(OktaServer)));
             builder.Services.Configure<SQLConnectionString>(builder.Configuration.GetSection(nameof(SQLConnectionString)));
             builder.Services.Configure<StorageConnectionString>(builder.Configuration.GetSection(nameof(StorageConnectionString)));
-
+            Console.WriteLine(sql.ConnectionString);
             builder.Services.AddDbContext<FlexyBoxDB>(option => option.UseSqlServer(sql.ConnectionString));
+            builder.Services.AddAutoMapper(typeof(DeleteCommand).Assembly);
 
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.Authority = okta.Authority;
-                options.Audience = okta.Audience;
-            });
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, c =>
+                {
+                    c.Authority = okta.Authority;
+                    c.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidAudience = okta.Audience,
+                        ValidIssuer = okta.Authority
+                    };
+                });
 
-            builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DeleteCommand).Assembly));
+            builder.Services.AddMediatR(config =>
+                config.RegisterServicesFromAssembly(typeof(DeleteCommand).Assembly)
+                      .AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+                      .AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+                      .AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlingBehavior<,>))
+            );
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IContentStorage, ContentBlobStorage>();
+
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
 
             var app = builder.Build();
 
@@ -48,12 +72,13 @@ namespace FlexyBox.api
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowAllOrigins");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
             app.MapControllers();
-
             app.Run();
         }
     }
