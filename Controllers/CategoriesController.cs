@@ -39,6 +39,7 @@ namespace FlexyBox.api.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<ActionResult<Category>> PostCategory([FromBody] CreateCategoryCommand createCategoryCommand)
         {
             var result = await _mediator.Send(createCategoryCommand);

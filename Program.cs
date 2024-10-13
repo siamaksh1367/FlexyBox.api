@@ -37,7 +37,10 @@ namespace FlexyBox.api
                         ValidIssuer = okta.Authority
                     };
                 });
-
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdmin", policy => policy.RequireClaim("permissions", "admin"));
+            });
             builder.Services.AddMediatR(config =>
                 config.RegisterServicesFromAssembly(typeof(DeleteCommand).Assembly)
                       .AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
