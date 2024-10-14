@@ -31,8 +31,10 @@ namespace FlexyBox.api.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory([FromBody] UpdateCategoryCommand updateCategoryCommand)
+        public async Task<IActionResult> PutCategory(int id, [FromBody] UpdateCategoryCommand updateCategoryCommand)
         {
+            if (updateCategoryCommand.Id != id)
+                return BadRequest();
             var result = await _mediator.Send(updateCategoryCommand);
             return Ok(result);
         }
