@@ -31,6 +31,7 @@ namespace FlexyBox.api.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> PutCategory(int id, [FromBody] UpdateCategoryCommand updateCategoryCommand)
         {
             if (updateCategoryCommand.Id != id)
@@ -49,6 +50,7 @@ namespace FlexyBox.api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<ActionResult<int>> DeleteCategory(int id)
         {
             var result = await _mediator.Send(new DeleteCategoryCommand(id));
