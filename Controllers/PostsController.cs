@@ -1,8 +1,6 @@
 ﻿using FlexyBox.core.Commands.CreateComment;
 using FlexyBox.core.Commands.CreatePost;
 using FlexyBox.core.Commands.DeletePost;
-using FlexyBox.core.Queries.GetPostsIncludingDetails;
-using FlexyBox.dal.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,19 +18,18 @@ namespace FlexyBox.api.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPostsIncludingDetail()
-        {
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<GetPostsIncludingDetailre >>> GetPostsIncludingDetail()
+        //{
+        //    var result = await _mediator.Send(new GetPostsIncludingDetailsQuery());
+        //    return Ok(result);
+        //}
 
-            var result = await _mediator.Send(new GetPostsIncludingDetailsQuery());
-            return Ok(result);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
-        {
-            throw new NotImplementedException();
-        }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Post>> GetPost(int id)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, UpdatePostCommand updatePostCommand)
@@ -42,7 +39,7 @@ namespace FlexyBox.api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreatePostResponse>> PostPost(CreatePostCommand createPostCommand)
+        public async Task<ActionResult<CreatePostResponse>> PostPost([FromBody] CreatePostCommand createPostCommand)
         {
             var result = await _mediator.Send(createPostCommand);
             return Ok(result);

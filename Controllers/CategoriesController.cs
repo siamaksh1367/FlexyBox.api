@@ -11,7 +11,6 @@ namespace FlexyBox.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;

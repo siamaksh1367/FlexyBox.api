@@ -49,9 +49,9 @@ namespace FlexyBox.api
             );
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IContentStorage, ContentBlobStorage>();
-
-
+            builder.Services.AddScoped<IContentStorage, FileContentStorage>();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddTransient<ExceptionHandlingMiddleware>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -73,7 +73,7 @@ namespace FlexyBox.api
 
             app.UseHttpsRedirection();
             app.UseCors("AllowAllOrigins");
-
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
 
