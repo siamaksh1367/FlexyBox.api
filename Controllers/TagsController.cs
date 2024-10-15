@@ -1,5 +1,5 @@
 ﻿using FlexyBox.core.Commands.CreateTag;
-using FlexyBox.core.Queries.SearchTag;
+using FlexyBox.core.Queries.GetTags;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
