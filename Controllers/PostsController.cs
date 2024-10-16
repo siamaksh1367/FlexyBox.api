@@ -1,6 +1,7 @@
 ﻿using FlexyBox.core.Commands.CreateComment;
 using FlexyBox.core.Commands.CreatePost;
 using FlexyBox.core.Commands.DeletePost;
+using FlexyBox.core.Queries.GetPostsIncludingDetails;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,10 +19,17 @@ namespace FlexyBox.api.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetPostsAsync([FromQuery] GetPostsIncludingDetailsQuery getPostsIncludingDetailsQuery)
+        {
+            var result = await _mediator.Send(getPostsIncludingDetailsQuery);
+            return Ok(result);
+        }
+
         //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<GetPostsIncludingDetailre >>> GetPostsIncludingDetail()
+        //public async Task<IActionResult> GetPostsAsync()
         //{
-        //    var result = await _mediator.Send(new GetPostsIncludingDetailsQuery());
+        //    var result = await _mediator.Send(new );
         //    return Ok(result);
         //}
 
