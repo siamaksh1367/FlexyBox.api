@@ -24,7 +24,7 @@ namespace FlexyBox.api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetCategoryResponse>>> GetCategories()
         {
-            var categories = await _mediator.Send(new GetAllCategoryQuery());
+            var categories = await _mediator.Send(new GetCategoriesQuery());
             return Ok(categories);
         }
 

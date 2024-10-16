@@ -18,15 +18,15 @@ namespace FlexyBox.api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetTagsResponse>>> GetTags()
+        public async Task<ActionResult<IEnumerable<GetTagResponse>>> GetTags()
         {
-            var tags = await _mediator.Send(new GetAllTagsQuery());
+            var tags = await _mediator.Send(new GetTagsQuery());
             return Ok(tags);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<GetTagsResponse>>> CreateTags([FromBody] CreateTagCommand createTagCommand)
+        public async Task<ActionResult<IEnumerable<GetTagResponse>>> CreateTags([FromBody] CreateTagCommand createTagCommand)
         {
             var tags = await _mediator.Send(createTagCommand);
             return Ok(tags);
