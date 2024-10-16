@@ -1,6 +1,7 @@
 ﻿using FlexyBox.core.Commands.CreateComment;
 using FlexyBox.core.Commands.CreatePost;
 using FlexyBox.core.Commands.DeletePost;
+using FlexyBox.core.Queries.GetPost;
 using FlexyBox.core.Queries.GetPosts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,17 +22,18 @@ namespace FlexyBox.api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPostsAsync([FromQuery] GetPostQuery getPostQuery)
+        public async Task<IActionResult> GetPostsAsync([FromQuery] GetPostsQuery getPostQuery)
         {
             var result = await _mediator.Send(getPostQuery);
             return Ok(result);
         }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Post>> GetPost(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetPostResponse>> GetPost(int id)
+        {
+            var result = await _mediator.Send(new GetPostQuery() { Id = id });
+            return Ok(result);
+        }
 
         [HttpPut("{id}")]
         [Authorize]
