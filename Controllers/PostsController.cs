@@ -3,6 +3,7 @@ using FlexyBox.core.Commands.CreatePost;
 using FlexyBox.core.Commands.DeletePost;
 using FlexyBox.core.Queries.GetPosts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlexyBox.api.Controllers
@@ -33,6 +34,7 @@ namespace FlexyBox.api.Controllers
         //}
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutPost(int id, UpdatePostCommand updatePostCommand)
         {
             var result = await _mediator.Send(updatePostCommand);
@@ -40,6 +42,7 @@ namespace FlexyBox.api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<CreatePostResponse>> PostPost([FromBody] CreatePostCommand createPostCommand)
         {
             var result = await _mediator.Send(createPostCommand);
@@ -47,6 +50,7 @@ namespace FlexyBox.api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<int>> DeletePost(int id)
         {
             var result = await _mediator.Send(new DeletePostCommand(id));
