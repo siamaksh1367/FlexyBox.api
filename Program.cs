@@ -69,6 +69,7 @@ namespace FlexyBox.api
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IContentStorage, FileContentStorage>();
+            builder.Services.AddScoped<IUserInfo, UserInfo>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddTransient<ExceptionHandlingMiddleware>();
             builder.Services.AddControllers();
