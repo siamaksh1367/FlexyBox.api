@@ -39,6 +39,8 @@ namespace FlexyBox.api.Controllers
         [Authorize]
         public async Task<IActionResult> PutPost(int id, UpdatePostCommand updatePostCommand)
         {
+            if (updatePostCommand.Id != id)
+                return BadRequest();
             var result = await _mediator.Send(updatePostCommand);
             return Ok(result);
         }
