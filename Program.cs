@@ -6,6 +6,7 @@ using FlexyBox.dal.Generic;
 using FlexyBox.dal.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FlexyBox.api
 {
@@ -28,15 +29,34 @@ namespace FlexyBox.api
             builder.Services.AddAutoMapper(typeof(DeleteCommand).Assembly);
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, c =>
-                {
-                    c.Authority = okta.Authority;
-                    c.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidAudience = okta.Audience,
-                        ValidIssuer = okta.Authority
-                    };
-                });
+                             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, c =>
+                             {
+                                 c.Authority = okta.Authority;
+                                 c.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                                 {
+                                     ValidAudience = okta.Audience,
+                                     ValidIssuer = okta.Authority,
+
+                                     ValidateLifetime = true,
+
+                                     NameClaimType = "name",
+                                     RoleClaimType = "roles",
+                                 };
+
+                                 c.Events = new JwtBearerEvents
+                                 {
+                                     OnTokenValidated = context =>
+                                     {
+                                         var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+
+                                         var name = claimsIdentity.FindFirst("name")?.Value;
+                                         var email = claimsIdentity.FindFirst("email")?.Value;
+
+                                         return Task.CompletedTask;
+                                     }
+                                 };
+                             });
+
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdmin", policy => policy.RequireClaim("permissions", "admin"));
