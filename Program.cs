@@ -24,7 +24,6 @@ namespace FlexyBox.api
             builder.Services.Configure<OktaServer>(builder.Configuration.GetSection(nameof(OktaServer)));
             builder.Services.Configure<SQLConnectionString>(builder.Configuration.GetSection(nameof(SQLConnectionString)));
             builder.Services.Configure<StorageConnectionString>(builder.Configuration.GetSection(nameof(StorageConnectionString)));
-            Console.WriteLine(sql.ConnectionString);
             builder.Services.AddDbContext<FlexyBoxDB>(option => option.UseSqlServer(sql.ConnectionString));
             builder.Services.AddAutoMapper(typeof(DeleteCommand).Assembly);
 
