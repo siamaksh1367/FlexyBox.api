@@ -6,7 +6,7 @@ EXPOSE 443
 COPY ./aspnetapp.pfx /app/aspnetapp.pfx
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=debug
 WORKDIR /src
 COPY . .
 
@@ -15,7 +15,7 @@ WORKDIR "/src/FlexyBox.api"
 RUN dotnet build "./FlexyBox.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=debug
 RUN dotnet publish "./FlexyBox.api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
